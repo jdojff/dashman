@@ -6,12 +6,6 @@
 
 # variables are for putting things in ----------------------------------------
 
-C_RED="\e[31m"
-C_YELLOW="\e[33m"
-C_GREEN="\e[32m"
-C_CYAN="\e[36m"
-C_NORM="\e[0m"
-
 DOWNLOAD_PAGE='https://www.dashpay.io/downloads/'
 
 DASHD_RUNNING=0
@@ -21,6 +15,14 @@ if [ "$DASHMAN_CHECKOUT" == "v"$DASHMAN_VERSION ]; then
     DASHMAN_CHECKOUT=""
 else
     DASHMAN_CHECKOUT=" ("$DASHMAN_CHECKOUT")"
+fi
+
+if [[ ! $NOCOLOR ]]; then
+    C_RED="\e[31m"
+    C_YELLOW="\e[33m"
+    C_GREEN="\e[32m"
+    C_CYAN="\e[36m"
+    C_NORM="\e[0m"
 fi
 
 curl_cmd='timeout 7 curl -s'
@@ -38,7 +40,7 @@ die() { [[ $QUIET ]] || echo -e "$C_RED$1$C_NORM" ; exit 1 ; }
 
 quit(){ [[ $QUIET ]] || echo -e "$C_GREEN${1:-${messages["exiting"]}}$C_NORM" ; echo ; exit 0 ; }
 
-confirm() { read -r -p "$(echo -e "${1:-${messages["prompt_are_you_sure"]} [y/N]}")" ; [[ ${REPLY:0:1} = [Yy] ]]; }
+confirm() { [[ $UNATTENDED ]] || read -r -p "$(echo -e "${1:-${messages["prompt_are_you_sure"]} [y/N]}")" ; [[ ${REPLY:0:1} = [Yy] ]]; }
 
 
 usage(){
